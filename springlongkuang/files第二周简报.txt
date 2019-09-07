@@ -1,0 +1,1 @@
+本周学习mybatis框架知识：学习使用mybatis-generator自动生成Mapper.java、Mapper.xml，这样可以大大减少我们编写的代码量，同时也会减少我们编写代码的错误，了解了mybatis的动态SQL使用到的元素：if/choose (when, otherwise)/trim (where, set)/foreach的简单使用。下周的学习方向：继续学习mybatis框架和springboot框架知识

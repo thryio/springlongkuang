@@ -1,0 +1,399 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.pcl.springlongkuang.Mapper.TransOrderMapper" >
+  <resultMap id="BaseResultMap" type="org.pcl.springlongkuang.Model.TransOrder" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="trans_order_id" property="transOrderId" jdbcType="VARCHAR" />
+    <result column="driver_id" property="driverId" jdbcType="INTEGER" />
+    <result column="owner_id" property="ownerId" jdbcType="INTEGER" />
+    <result column="cabin_id" property="cabinId" jdbcType="INTEGER" />
+    <result column="containers" property="containers" jdbcType="VARCHAR" />
+    <result column="type" property="type" jdbcType="INTEGER" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="creator_id" property="creatorId" jdbcType="VARCHAR" />
+    <result column="deliver_at" property="deliverAt" jdbcType="VARCHAR" />
+    <result column="receive_at" property="receiveAt" jdbcType="VARCHAR" />
+    <result column="cabin_user_id" property="cabinUserId" jdbcType="VARCHAR" />
+    <result column="created_at" property="createdAt" jdbcType="TIMESTAMP" />
+    <result column="updated_at" property="updatedAt" jdbcType="TIMESTAMP" />
+    <result column="deleted_at" property="deletedAt" jdbcType="TIMESTAMP" />
+    <result column="car_id" property="carId" jdbcType="INTEGER" />
+  </resultMap>
+
+  <resultMap id="OrderResultMap" type="org.pcl.springlongkuang.Model.Order" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="order_id" property="orderId" jdbcType="VARCHAR" />
+    <result column="driver_id" property="driverId" jdbcType="INTEGER" />
+    <result column="containers" property="containers" jdbcType="VARCHAR" />
+    <result column="owner_id" property="ownerId" jdbcType="INTEGER" />
+    <result column="cabin_id" property="cabinId" jdbcType="INTEGER" />
+    <result column="shop_name" property="shopName" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="type" property="type" jdbcType="INTEGER" />
+    <result column="photos" property="photos" jdbcType="VARCHAR" />
+    <result column="trans_order_id" property="transOrderId" jdbcType="VARCHAR" />
+    <result column="creator_id" property="creatorId" jdbcType="VARCHAR" />
+    <result column="deliver_at" property="deliverAt" jdbcType="VARCHAR" />
+    <result column="receive_at" property="receiveAt" jdbcType="VARCHAR" />
+    <result column="cabin_user_id" property="cabinUserId" jdbcType="VARCHAR" />
+    <result column="created_at" property="createdAt" jdbcType="TIMESTAMP" />
+    <result column="updated_at" property="updatedAt" jdbcType="TIMESTAMP" />
+    <result column="deleted_at" property="deletedAt" jdbcType="TIMESTAMP" />
+    <result column="car_id" property="carId" jdbcType="INTEGER" />
+  </resultMap>
+  <resultMap id="DriverResultMap" type="org.pcl.springlongkuang.Model.Driver">
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="driver_name" property="driverName" jdbcType="VARCHAR" />
+    <result column="car_num" property="carNum" jdbcType="VARCHAR" />
+    <result column="phone" property="phone" jdbcType="VARCHAR" />
+    <result column="carrier" property="carrier" jdbcType="VARCHAR" />
+    <result column="owner_id" property="ownerId" jdbcType="INTEGER" />
+  </resultMap>
+  <resultMap id="ExceptionsResultMap" type="org.pcl.springlongkuang.Model.Exception">
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="containers" property="containers" jdbcType="VARCHAR" />
+    <result column="type" property="type" jdbcType="INTEGER" />
+    <result column="order_id" property="orderId" jdbcType="VARCHAR" />
+    <result column="created_at" property="createdAt" jdbcType="TIMESTAMP" />
+    <result column="updated_at" property="updatedAt" jdbcType="TIMESTAMP" />
+    <result column="deleted_at" property="deletedAt" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <resultMap id="CarResultMap" type="org.pcl.springlongkuang.Model.Car">
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="car_num" property="carNum" jdbcType="VARCHAR" />
+    <result column="gps_device" property="gpsDevice" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap id="OrderDetailsResult" type="org.pcl.springlongkuang.VO.OrderDetail">
+    <association property="order" resultMap="OrderResultMap"></association>
+    <association property="driver" resultMap="DriverResultMap"/>
+    <association property="car" resultMap="CarResultMap"></association>
+    <association property="exception" resultMap="ExceptionsResultMap"/>
+  </resultMap>
+  <resultMap id="TransOrderDetailResultMap" type="org.pcl.springlongkuang.VO.TransOrderDetail">
+    <association property="transOrder" resultMap="BaseResultMap"></association>
+    <association property="orderDetail" resultMap="OrderDetailsResult"></association>
+  </resultMap>
+  <resultMap id="TransOrderListMap" type="org.pcl.springlongkuang.VO.TransOrderList">
+    <result column="shop_count" property="shopCount" jdbcType="INTEGER"></result>
+    <result column="shop_name" property="shopName" jdbcType="VARCHAR"></result>
+    <association property="transOrder" resultMap="BaseResultMap"></association>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, trans_order_id, driver_id, owner_id, cabin_id, containers, type, status, creator_id, 
+    deliver_at, receive_at, cabin_user_id, created_at, updated_at, deleted_at, car_id
+  </sql>
+
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from trans_orders
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+
+  <select id="selectByCreatedAt" resultMap="BaseResultMap" parameterType="org.pcl.springlongkuang.Model.TransOrder">
+    select * from trans_orders
+    where date(created_at)= curdate()
+    order by created_at desc limit 1
+  </select>
+
+
+  <select id="selectByDate" resultMap="BaseResultMap" parameterType="org.pcl.springlongkuang.Model.TransOrder">
+    select * from trans_orders
+    where date_format(created_at,'%Y%m%d')=#{date,jdbcType=VARCHAR}
+  </select>
+
+  <select id="GetTransOrderListViaTransOrderID" resultMap="TransOrderListMap">
+    select tos.*,(select count(*) from orders o left join drivers d on o.driver_id = d.owner_id
+    where o.trans_order_id = tos.trans_order_id and o.type = #{orderType,jdbcType=INTEGER} and o.status = #{state,jdbcType=INTEGER}) as shop_count,
+           (select shop_name from orders o where  o.trans_order_id = tos.trans_order_id limit 1) as shop_name from trans_orders tos
+           where tos.trans_order_id =#{tsOrderID,jdbcType=VARCHAR} and tos.status = #{state,jdbcType=INTEGER} and tos.type = #{orderType,jdbcType=INTEGER}
+          order by tos.created_at desc
+  </select>
+
+  <select id="GetTransOrderDetail" resultMap="TransOrderDetailResultMap">
+    select * from trans_orders tos join orders o on o.trans_order_id = tos.trans_order_id
+      left join drivers d on d.owner_id = tos.driver_id
+      left join exceptions e on o.order_id = e.order_id
+          where tos.trans_order_id = #{tsOrderID,jdbcType=VARCHAR}
+              and tos.type = #{orderType,jdbcType=INTEGER}	 and tos.status= #{state,jdbcType=INTEGER}
+            order by o.id desc limit #{limit,jdbcType=INTEGER} offset #{offset,jdbcType=INTEGER}
+  </select>
+
+
+  <select id="CountTransOrder" resultType="java.lang.Integer">
+    select count(*) from orders
+      where trans_order_id= #{tsOrderID,jdbcType=VARCHAR}
+          and type = #{orderType,jdbcType=INTEGER} and status= #{state,jdbcType=INTEGER}
+  </select>
+
+  <delete id="deleteByTOid" parameterType="java.lang.String" >
+    delete from trans_orders
+    where trans_order_id = #{tsOrder,jdbcType=INTEGER}
+  </delete>
+
+  <delete id="deleteByOrderId" parameterType="java.lang.String" >
+    delete from trans_orders
+     where (trans_orders.trans_order_id =
+    (select trans_order_id from orders o where o.order_id =#{orderId,jdbcType=VARCHAR} ))
+    and  (1 = (select count(o.trans_order_id) from orders o where o.trans_order_id
+     = (select trans_order_id from orders o where o.order_id =#{orderId,jdbcType=VARCHAR} )))
+  </delete>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from trans_orders
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="org.pcl.springlongkuang.Model.TransOrder" >
+    insert into trans_orders (id, trans_order_id, driver_id, 
+      owner_id, cabin_id, containers, 
+      type, status, creator_id, 
+      deliver_at, receive_at, cabin_user_id, 
+      created_at, updated_at, deleted_at, 
+      car_id)
+    values (#{id,jdbcType=INTEGER}, #{transOrderId,jdbcType=VARCHAR}, #{driverId,jdbcType=INTEGER}, 
+      #{ownerId,jdbcType=INTEGER}, #{cabinId,jdbcType=INTEGER}, #{containers,jdbcType=VARCHAR}, 
+      #{type,jdbcType=INTEGER}, #{status,jdbcType=INTEGER}, #{creatorId,jdbcType=VARCHAR}, 
+      #{deliverAt,jdbcType=VARCHAR}, #{receiveAt,jdbcType=VARCHAR}, #{cabinUserId,jdbcType=VARCHAR}, 
+      #{createdAt,jdbcType=TIMESTAMP}, #{updatedAt,jdbcType=TIMESTAMP}, #{deletedAt,jdbcType=TIMESTAMP}, 
+      #{carId,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="org.pcl.springlongkuang.Model.TransOrder" >
+    insert into trans_orders
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="transOrderId != null" >
+        trans_order_id,
+      </if>
+      <if test="driverId != null" >
+        driver_id,
+      </if>
+      <if test="ownerId != null" >
+        owner_id,
+      </if>
+      <if test="cabinId != null" >
+        cabin_id,
+      </if>
+      <if test="containers != null" >
+        containers,
+      </if>
+      <if test="type != null" >
+        type,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="creatorId != null" >
+        creator_id,
+      </if>
+      <if test="deliverAt != null" >
+        deliver_at,
+      </if>
+      <if test="receiveAt != null" >
+        receive_at,
+      </if>
+      <if test="cabinUserId != null" >
+        cabin_user_id,
+      </if>
+      <if test="createdAt != null" >
+        created_at,
+      </if>
+      <if test="updatedAt != null" >
+        updated_at,
+      </if>
+      <if test="deletedAt != null" >
+        deleted_at,
+      </if>
+      <if test="carId != null" >
+        car_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="transOrderId != null" >
+        #{transOrderId,jdbcType=VARCHAR},
+      </if>
+      <if test="driverId != null" >
+        #{driverId,jdbcType=INTEGER},
+      </if>
+      <if test="ownerId != null" >
+        #{ownerId,jdbcType=INTEGER},
+      </if>
+      <if test="cabinId != null" >
+        #{cabinId,jdbcType=INTEGER},
+      </if>
+      <if test="containers != null" >
+        #{containers,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="creatorId != null" >
+        #{creatorId,jdbcType=VARCHAR},
+      </if>
+      <if test="deliverAt != null" >
+        #{deliverAt,jdbcType=VARCHAR},
+      </if>
+      <if test="receiveAt != null" >
+        #{receiveAt,jdbcType=VARCHAR},
+      </if>
+      <if test="cabinUserId != null" >
+        #{cabinUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="createdAt != null" >
+        #{createdAt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatedAt != null" >
+        #{updatedAt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deletedAt != null" >
+        #{deletedAt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="carId != null" >
+        #{carId,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="org.pcl.springlongkuang.Model.TransOrder" >
+    update trans_orders
+    <set >
+      <if test="transOrderId != null" >
+        trans_order_id = #{transOrderId,jdbcType=VARCHAR},
+      </if>
+      <if test="driverId != null" >
+        driver_id = #{driverId,jdbcType=INTEGER},
+      </if>
+      <if test="ownerId != null" >
+        owner_id = #{ownerId,jdbcType=INTEGER},
+      </if>
+      <if test="cabinId != null" >
+        cabin_id = #{cabinId,jdbcType=INTEGER},
+      </if>
+      <if test="containers != null" >
+        containers = #{containers,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        type = #{type,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="creatorId != null" >
+        creator_id = #{creatorId,jdbcType=VARCHAR},
+      </if>
+      <if test="deliverAt != null" >
+        deliver_at = #{deliverAt,jdbcType=VARCHAR},
+      </if>
+      <if test="receiveAt != null" >
+        receive_at = #{receiveAt,jdbcType=VARCHAR},
+      </if>
+      <if test="cabinUserId != null" >
+        cabin_user_id = #{cabinUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="createdAt != null" >
+        created_at = #{createdAt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatedAt != null" >
+        updated_at = #{updatedAt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deletedAt != null" >
+        deleted_at = #{deletedAt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="carId != null" >
+        car_id = #{carId,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="org.pcl.springlongkuang.Model.TransOrder" >
+    update trans_orders
+    set trans_order_id = #{transOrderId,jdbcType=VARCHAR},
+      driver_id = #{driverId,jdbcType=INTEGER},
+      owner_id = #{ownerId,jdbcType=INTEGER},
+      cabin_id = #{cabinId,jdbcType=INTEGER},
+      containers = #{containers,jdbcType=VARCHAR},
+      type = #{type,jdbcType=INTEGER},
+      status = #{status,jdbcType=INTEGER},
+      creator_id = #{creatorId,jdbcType=VARCHAR},
+      deliver_at = #{deliverAt,jdbcType=VARCHAR},
+      receive_at = #{receiveAt,jdbcType=VARCHAR},
+      cabin_user_id = #{cabinUserId,jdbcType=VARCHAR},
+      created_at = #{createdAt,jdbcType=TIMESTAMP},
+      updated_at = #{updatedAt,jdbcType=TIMESTAMP},
+      deleted_at = #{deletedAt,jdbcType=TIMESTAMP},
+      car_id = #{carId,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+  <update id="updateByTransOrderId" parameterType="java.lang.String">
+    update  trans_orders
+    set containers=#{contrainasbyte,jdbcType=VARCHAR}
+    where trans_order_id= #{transOrderID,jdbcType=VARCHAR}
+  </update>
+
+  <update id="updateByTransOrderIdAll" parameterType="org.pcl.springlongkuang.Model.TransOrder" >
+    update trans_orders
+    <set >
+      <if test="transOrderId != null" >
+        trans_order_id = #{transOrderId,jdbcType=VARCHAR},
+      </if>
+      <if test="driverId != null" >
+        driver_id = #{driverId,jdbcType=INTEGER},
+      </if>
+      <if test="ownerId != null" >
+        owner_id = #{ownerId,jdbcType=INTEGER},
+      </if>
+      <if test="cabinId != null" >
+        cabin_id = #{cabinId,jdbcType=INTEGER},
+      </if>
+      <if test="containers != null" >
+        containers = #{containers,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        type = #{type,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="creatorId != null" >
+        creator_id = #{creatorId,jdbcType=VARCHAR},
+      </if>
+      <if test="deliverAt != null" >
+        deliver_at = #{deliverAt,jdbcType=VARCHAR},
+      </if>
+      <if test="receiveAt != null" >
+        receive_at = #{receiveAt,jdbcType=VARCHAR},
+      </if>
+      <if test="cabinUserId != null" >
+        cabin_user_id = #{cabinUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="createdAt != null" >
+        created_at = #{createdAt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatedAt != null" >
+        updated_at = #{updatedAt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deletedAt != null" >
+        deleted_at = #{deletedAt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="carId != null" >
+        car_id = #{carId,jdbcType=INTEGER},
+      </if>
+    </set>
+    where trans_order_id = #{transOrderId,jdbcType=VARCHAR}
+  </update>
+
+  <update id="updateByTransOrderIdAndCheckFinish" parameterType="java.lang.String">
+    update  trans_orders ts
+    set ts.status=3,ts.receive_at=#{now,jdbcType=VARCHAR}
+    where ts.trans_order_id= #{transOrderID,jdbcType=VARCHAR}
+    and 3=all(select status from orders o where o.trans_order_id =#{transOrderID,jdbcType=VARCHAR})
+  </update>
+</mapper>
